@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HPS Suspense Poll</title>
+<style>
+body {
+  font-family: Arial; 
+  background: linear-gradient(135deg,#1a1a1a,#0d0d0d);
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  height: 100vh; 
+  color: #fff;
+}
+
+.poll-container {
+  background: rgba(0,0,0,0.85);
+  padding: 30px;
+  border-radius: 25px;
+  width: 380px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+  text-align: center;
+  position: relative;
+}
+
+.reveal-text {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff4500;
+  text-shadow: 0 0 15px #ff6347, 0 0 25px #ff6347;
+  margin-bottom: 15px;
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  0% { text-shadow: 0 0 10px #ff6347, 0 0 20px #ff6347; color: #ff4500; }
+  50% { text-shadow: 0 0 20px #ffd700, 0 0 30px #ffd700; color: #ffd700; }
+  100% { text-shadow: 0 0 10px #ff6347, 0 0 20px #ff6347; color: #ff4500; }
+}
+
+.poll-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #ffd700;
+  text-shadow: 0 0 10px #ff4500;
+  animation:suspense 1.5s infinite;
+}
+
+@keyframes suspense {
+  0%,100% {color:#ffd700;}
+  50% {color:#ff4500;}
+}
+
+.input-section input {
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  width:80%;
+  font-size:16px;
+}
+
+.input-section button {
+  padding:10px 20px;
+  margin-top:10px;
+  font-size:16px;
+  border:none;
+  border-radius:12px;
+  background: linear-gradient(90deg,#ff5f6d,#ffc371);
+  cursor:pointer;
+  color:#fff;
+  font-weight:bold;
+  transition: 0.3s;
+}
+
+.input-section button:hover { transform: scale(1.05); }
+
+.poll-options {
+  display:flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 260px;
+  margin-top:20px;
+}
+
+.option {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:50px;
+  cursor:pointer;
+  position:relative;
+  transition: transform 0.3s;
+}
+
+.option:hover { transform: scale(1.1); }
+.option.voted { cursor: default; transform: scale(1.1); }
+
+.bar {
+  width:45px;
+  border-radius:20px 20px 0 0;
+  transition: height 1s ease-in-out;
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+}
+
+.percentage {
+  position:absolute;
+  top:-25px;
+  font-size:14px;
+  font-weight:bold;
+  color:#ffd700;
+}
+
+.label {
+  margin-top:15px;
+  font-size:14px;
+  font-weight:600;
+}
+
+.option.disabled .bar { opacity:0.6; }
+
+</style>
+</head>
+<body>
+
+<div class="poll-container">
+ 
+  <div class="poll-title">Wanna know who is the real owner of <b>hostel_gossips_hps</b>?</div>
+
+  <div class="input-section" id="name-section">
+    <input type="text" id="username" placeholder="Enter your name"/>
+    <br>
+    <button onclick="submitName()">Start Poll</button>
+  </div>
+ <div class="reveal-text">The real owner will be revealed at 11 PM today!</div>
+  <div class="poll-options" id="poll-options" style="display:none;">
+    <div class="option" id="option0" onclick="vote(0)"><div class="bar" id="bar0" style="background:linear-gradient(180deg,#ff5f6d,#ff0000)"><div class="percentage" id="percent0">0%</div></div><div class="label">Afifa</div></div>
+    <div class="option" id="option1" onclick="vote(1)"><div class="bar" id="bar1" style="background:linear-gradient(180deg,#ffa500,#ffcc00)"><div class="percentage" id="percent1">0%</div></div><div class="label">Larjey</div></div>
+    <div class="option" id="option2" onclick="vote(2)"><div class="bar" id="bar2" style="background:linear-gradient(180deg,#00ff7f,#008000)"><div class="percentage" id="percent2">0%</div></div><div class="label">Salma</div></div>
+    <div class="option" id="option3" onclick="vote(3)"><div class="bar" id="bar3" style="background:linear-gradient(180deg,#1e90ff,#00008b)"><div class="percentage" id="percent3">0%</div></div><div class="label">Tsering</div></div>
+    <div class="option" id="option4" onclick="vote(4)"><div class="bar" id="bar4" style="background:linear-gradient(180deg,#ff69b4,#ff1493)"><div class="percentage" id="percent4">0%</div></div><div class="label">Eram</div></div>
+    <div class="option" id="option5" onclick="vote(5)"><div class="bar" id="bar5" style="background:linear-gradient(180deg,#8a2be2,#4b0082)"><div class="percentage" id="percent5">0%</div></div><div class="label">Faisal</div></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBRp4pcesF787m4oJADWyZszfOQU7Y-AUY",
+  authDomain: "poll-khol.firebaseapp.com",
+  databaseURL: "https://poll-khol-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "poll-khol",
+  storageBucket: "poll-khol.firebasestorage.app",
+  messagingSenderId: "737041302872",
+  appId: "1:737041302872:web:5c16ddfa0fc93d9c4b912d"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+let username = null;
+let voted = false;
+
+function submitName(){
+  const input = document.getElementById('username').value.trim();
+  if(!input){ alert("Enter your name"); return; }
+  username = input;
+
+  db.ref('users/'+username).get().then(snapshot=>{
+    if(snapshot.exists() || localStorage.getItem('pollVoted')){
+      alert("You have already voted!");
+    }else{
+      document.getElementById('name-section').style.display='none';
+      document.getElementById('poll-options').style.display='flex';
+    }
+  });
+}
+
+function vote(index){
+  if(voted) return;
+  voted=true;
+  localStorage.setItem('pollVoted',true);
+
+  db.ref('users/'+username).set({vote:index, timestamp: Date.now()});
+  db.ref('votes/'+index).transaction(current=>(current||0)+1);
+
+  document.querySelectorAll('.option').forEach(opt=>opt.classList.add('disabled'));
+  document.getElementById('option'+index).classList.add('voted');
+}
+
+function updateGraph(votes){
+  const totalVotes = Object.values(votes||{}).reduce((a,b)=>a+(b||0),0)||1;
+  for(let i=0;i<6;i++){
+    const count = votes[i]||0;
+    const percent = Math.round((count/totalVotes)*100);
+    const barHeight = (percent/100)*180;
+    document.getElementById('bar'+i).style.height = barHeight+'px';
+    document.getElementById('percent'+i).innerText = percent+'%';
+  }
+}
+
+db.ref('votes').on('value', snapshot=>{
+  updateGraph(snapshot.val()||{});
+});
+</script>
+</body>
+</html>

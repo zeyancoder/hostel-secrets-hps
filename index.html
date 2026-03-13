@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secret Reveal</title>
+<style>
+  /* Base styles */
+  body {
+    background: linear-gradient(120deg, #1a1a1a, #0d0d0d);
+    color: #fff;
+    font-family: 'Arial Black', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    margin: 0;
+    padding: 0 10px;
+  }
+
+  .container {
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: 8vw; /* Responsive font size */
+    margin-bottom: 5vw;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+
+  h1:hover {
+    transform: scale(1.05);
+    color: #ff00ff;
+  }
+
+  button {
+    padding: 3vw 6vw; /* Responsive button size */
+    font-size: 4vw;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #ff0080, #ff8c00);
+    color: #fff;
+    transition: transform 0.3s, background 0.3s;
+    margin-top: 4vw;
+  }
+
+  button:hover {
+    transform: scale(1.1);
+    background: linear-gradient(90deg, #ff8c00, #ff0080);
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .suspense {
+    font-size: 6vw; /* responsive suspense text */
+    margin: 4vw 0;
+    animation: blink 1s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Media query for very small phones */
+  @media (max-width: 400px) {
+    h1 { font-size: 10vw; }
+    button { font-size: 5vw; padding: 4vw 8vw; }
+    .suspense { font-size: 8vw; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Step 1 -->
+  <h1 id="question">Do you want to know a secret?</h1>
+  <button id="yesBtn">YES</button>
+
+  <!-- Step 2 -->
+  <div id="step2" class="hidden">
+    <p class="suspense">The secret is about to be revealed...</p>
+    <button id="nextBtn">Really??</button>
+  </div>
+
+  <!-- Step 3 -->
+  <div id="step3" class="hidden">
+    <h1>The owner of <span style="color:#ff00ff;">hostel_gossips_hps</span> is...</h1>
+    <button id="knowBtn">Know Who?</button>
+  </div>
+</div>
+
+<script>
+  const yesBtn = document.getElementById('yesBtn');
+  const question = document.getElementById('question');
+  const step2 = document.getElementById('step2');
+  const nextBtn = document.getElementById('nextBtn');
+  const step3 = document.getElementById('step3');
+  const knowBtn = document.getElementById('knowBtn');
+
+  yesBtn.addEventListener('click', () => {
+    question.classList.add('hidden');
+    yesBtn.classList.add('hidden');
+    step2.classList.remove('hidden');
+  });
+
+  nextBtn.addEventListener('click', () => {
+    step2.classList.add('hidden');
+    step3.classList.remove('hidden');
+  });
+
+  knowBtn.addEventListener('click', () => {
+    // Redirect to another page
+    window.location.href = "base.html";
+  });
+</script>
+
+</body>
+</html>

